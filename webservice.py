@@ -1,6 +1,6 @@
-import logging as logging
+#import logging as logging
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 
 import base64
@@ -30,10 +30,10 @@ def RecognizeFaces():
 
     img = cv2.imread(path_img, 0)
 
-    rois = align_images(img)
+    roi = img  #align_images(img)
 
     # se aplica el modelo al roi
-    id, con = model.predict(rois[0])
+    id, con = model.predict(roi)
 
     imagen = images[1][id]
 
@@ -54,12 +54,16 @@ class HelloWorldService(ServiceBase):
 
         image = RecognizeFaces()
 
-        id = int(imageId(image))
-
-        if id == 0:
+        if image is None:
             return 'No hay registros asociados a la persona'
         else:
-            return  queryPerson(int(id))
+            rut = str(imageId(image))
+
+        if rut is None:
+            return 'No hay registros asociados a la persona'
+        else:
+            return  queryPerson(str(rut))
+
 application = Application([HelloWorldService],
     tns='spyne.examples.hello',
     in_protocol=Soap11(validator='lxml'),

@@ -22,6 +22,7 @@ def align_images(img):
         faces_detected = detector(img)
 
         for k, d in enumerate(faces_detected):
+
             # definir el marco del rostro
             bounding_box = align.getLargestFaceBoundingBox(d)
 

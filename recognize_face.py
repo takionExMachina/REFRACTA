@@ -12,7 +12,7 @@ def RecognizeFaces():
 
     images = read_images(path_train) # [X, y, c] [imagen, label, contador]
 
-    model = cv2.createLBPHFaceRecognizer(1, 10, 7, 7, 81.0)
+    model = cv2.createLBPHFaceRecognizer()
 
     # se entrena el modelo con las imagenes del arreglo
     model.train(numpy.asarray(images[0]), numpy.asarray(images[2]))
@@ -32,4 +32,3 @@ def RecognizeFaces():
         message =  imagen
 
     return message
-
