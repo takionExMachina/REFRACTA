@@ -8,8 +8,8 @@ import cv2
 import numpy
 from process_faces import align_images
 from read_images import read_images
-from mssql import queryPerson
-from mssql import imageId
+from mysql import queryPerson
+from mysql import imageId
 from spyne import  Application, rpc, ServiceBase, Unicode
 from spyne import Iterable
 from spyne.protocol.soap  import Soap11
@@ -24,7 +24,7 @@ def RecognizeFaces():
     images = read_images(path_train) # [X, y, c] [imagen, label, contador]
 
     #model = cv2.createLBPHFaceRecognizer(4, 2, 7, 7, 20.0)
-    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=6,grid_x=5, grid_y=5, threshold=80)
+    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=5,grid_x=5, grid_y=5, threshold=80)
 
     # se entrena el modelo con las imagenes del arreglo
     model.train(numpy.asarray(images[0]), numpy.asarray(images[2]))
