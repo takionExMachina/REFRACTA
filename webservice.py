@@ -24,7 +24,7 @@ def RecognizeFaces():
     images = read_images(path_train) # [X, y, c] [imagen, label, contador]
 
     #model = cv2.createLBPHFaceRecognizer(4, 2, 7, 7, 20.0)
-    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=8,grid_x=5, grid_y=5, threshold=80)
+    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=6,grid_x=5, grid_y=5, threshold=80)
 
     # se entrena el modelo con las imagenes del arreglo
     model.train(numpy.asarray(images[0]), numpy.asarray(images[2]))
@@ -37,8 +37,6 @@ def RecognizeFaces():
     id, con = model.predict(roi)
 
     imagen = images[1][id]
-
-    print con
 
     if con > 80:
         message =  None
@@ -61,7 +59,6 @@ class HelloWorldService(ServiceBase):
             return None
         else:
             rut = str(imageId(image))
-            print rut
 
             if rut is None:
                 return 'No hay registros asociados a la persona'
