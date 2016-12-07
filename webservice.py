@@ -1,6 +1,6 @@
-#import logging as logging
+import logging as logging
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 import base64
@@ -23,7 +23,8 @@ def RecognizeFaces():
 
     images = read_images(path_train) # [X, y, c] [imagen, label, contador]
 
-    model = cv2.createLBPHFaceRecognizer(4, 2, 7, 7, 20.0)
+    #model = cv2.createLBPHFaceRecognizer(4, 2, 7, 7, 20.0)
+    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=8,grid_x=5, grid_y=5, threshold=80)
 
     # se entrena el modelo con las imagenes del arreglo
     model.train(numpy.asarray(images[0]), numpy.asarray(images[2]))
@@ -37,12 +38,14 @@ def RecognizeFaces():
 
     imagen = images[1][id]
 
+    print con
+
     if con > 80:
-        message =  'No hay registro asociado'
+        message =  None
     else:
         message =  imagen
 
-    return imagen
+    return message
 
 class HelloWorldService(ServiceBase):
     @rpc(Unicode,_returns=Iterable(Unicode))
@@ -55,14 +58,15 @@ class HelloWorldService(ServiceBase):
         image = RecognizeFaces()
 
         if image is None:
-            return 'No hay registros asociados a la persona'
+            return None
         else:
             rut = str(imageId(image))
+            print rut
 
-        if rut is None:
-            return 'No hay registros asociados a la persona'
-        else:
-            return  queryPerson(str(rut))
+            if rut is None:
+                return 'No hay registros asociados a la persona'
+            else:
+                return  queryPerson(str(rut))
 
 application = Application([HelloWorldService],
     tns='spyne.examples.hello',

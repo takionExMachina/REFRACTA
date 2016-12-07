@@ -20,6 +20,7 @@ region = 'Region: '
 window = tk.Tk()  #Makes main window
 window.wm_title("REFRACTA Client")
 window.config(background="#000000")
+window.resizable(0, 0)
 
 #Graphics window
 imageFrame = tk.Frame(window, width=600, height=500)
@@ -34,7 +35,7 @@ lmain.grid(row=0, column=0)
 
 labelTitle = tk.Label(labelFrame)
 labelTitle.grid(row=0, column=0)
-labelTitle.configure(text=info)
+labelTitle.configure(text=info, background="#000000", foreground="#ffffff")
 
 labelRut = tk.Label(labelFrame)
 labelRut.grid(row=1, column=0)
@@ -98,10 +99,12 @@ def sendFace():
 
     result = face_recog.service.say_hello(string)
 
-    response = ''
-
-    for i in result:
-        response += i
+    if result is not None:
+        response = ''
+        for i in result:
+            response += i
+    else:
+        response = None
 
     return response
 
@@ -121,7 +124,10 @@ def messageProcess(message):
 
     fecha_registro = message[message.index('fecha:') + 1]
     fecha_caducidad = message[message.index('caduca:') + 1]
-    recinto = message[message.index('recinto:') + 1]
+
+    recinto = ''
+    for r in range(message.index('recinto:') + 1, message.index('direccion:')):
+        recinto += message[r] + " "
 
     direccion = ''
 
@@ -150,7 +156,6 @@ def messageProcess(message):
     returned.append(region)
 
     return returned
-
 
 def show_frame():
 
