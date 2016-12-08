@@ -6,14 +6,14 @@ logging.basicConfig(level=logging.DEBUG)
 import base64
 import cv2
 import numpy
-from process_faces import align_images
 from read_images import read_images
-from mysql import queryPerson
 from mysql import imageId
+from mysql import queryPerson
 from spyne import  Application, rpc, ServiceBase, Unicode
 from spyne import Iterable
 from spyne.protocol.soap  import Soap11
 from spyne.server.wsgi  import WsgiApplication
+from process_faces import align_images
 
 
 def RecognizeFaces():
@@ -24,14 +24,14 @@ def RecognizeFaces():
     images = read_images(path_train) # [X, y, c] [imagen, label, contador]
 
     #model = cv2.createLBPHFaceRecognizer(4, 2, 7, 7, 20.0)
-    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=5,grid_x=5, grid_y=5, threshold=80)
+    model = cv2.createLBPHFaceRecognizer(radius=4, neighbors=5,grid_x=5, grid_y=5, threshold=255)
 
     # se entrena el modelo con las imagenes del arreglo
     model.train(numpy.asarray(images[0]), numpy.asarray(images[2]))
 
     img = cv2.imread(path_img, 0)
 
-    roi = img  #align_images(img)
+    roi = align_images(img)[0]  #align_images(img)
 
     # se aplica el modelo al roi
     id, con = model.predict(roi)

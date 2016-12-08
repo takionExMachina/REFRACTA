@@ -2,6 +2,7 @@
 import cv2
 import Tkinter as tk
 import Image, ImageTk
+from process_faces import align_images
 
 info = 'INFORMACION PERSONA: '
 rut = 'Rut: '
@@ -162,11 +163,11 @@ def show_frame():
     _, frame = cap.read()
 
     try:
-        frame = cv2.resize(frame, None, fx=0.4, fy=0.4, interpolation=cv2.INTER_CUBIC)
+        frame = cv2.resize(frame, None, fx=0.6, fy=0.6, interpolation=cv2.INTER_CUBIC)
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        faces = classifier.detectMultiScale(gray, 1.2, 5)
+        faces = classifier.detectMultiScale(gray, 1.3, 5)
 
         if faces is not None:
             for x, y, w, h in faces:
@@ -216,12 +217,14 @@ def show_frame():
                     labelProvincia.configure(text=provincia)
                     labelRegion.configure(text=region)
 
-                rectangle = cv2.rectangle(frame, (x, y), (x + w, y + h), (b, g, r), 3)
+                rectangle = cv2.rectangle(frame, (x, y), (x + w, y + h), (b, g, r), 2)
 
     except:
         pass
 
     frame = cv2.flip(frame, flipCode=1)
+
+    frame = cv2.resize(frame, None, 2.0, 2.0, cv2.INTER_CUBIC)
 
     cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
 

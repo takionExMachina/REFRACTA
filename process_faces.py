@@ -15,11 +15,11 @@ def align_images(img):
     #se crea un arreglo con los rostros
     rois = []
 
-    #box = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
+    box = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 
     try:
         # detectar rostros usando dlib
-        faces_detected = detector(img)
+        faces_detected = detector(box)
 
         for k, d in enumerate(faces_detected):
 
@@ -27,13 +27,13 @@ def align_images(img):
             bounding_box = align.getLargestFaceBoundingBox(d)
 
             # alinear el rostro
-            roi = align.align(96, img, bounding_box, landmarkIndices=openface.AlignDlib.OUTER_EYES_AND_NOSE)
+            roi = align.align(96, box, bounding_box, landmarkIndices=openface.AlignDlib.OUTER_EYES_AND_NOSE)
 
             # se cambia el size de la imagen asociada al roi
             roi = cv2.resize(roi, (96, 96), interpolation=cv2.INTER_CUBIC)
 
             rois.append(roi)
 
-        return rois
+            return rois
     except:
         pass
